@@ -1,8 +1,10 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
     <title>{% block title %}Главная{% endblock %} - Доска объявлений</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bboard/style.css' %}">
 </head>
 <body>
     <header>
