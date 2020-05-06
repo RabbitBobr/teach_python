@@ -9,6 +9,9 @@
 <body>
     <header>
         <h1>Объявления</h1>
+        <a href="{% url 'login' %}">Вход</a>
+        <a href="{% url 'logout' %}">Выход</a>
+        <a href="{% url 'password_change' %}">Смена пароля</a>
     </header>
     <nav>
         <a href="{% url 'index' %}">Главная</a>

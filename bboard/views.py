@@ -5,11 +5,13 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
 from django.forms.formsets import ORDERING_FIELD_NAME
+from django.contrib.auth.decorators import login_required
 
 from .models import Bb, Rubric
 from .forms import BbForm
 
 
+@login_required(login_url='/bboard/accounts/login/')
 def rubrics(request):
     RubricFormSet = modelformset_factory(Rubric, fields=('name',), can_order=True, can_delete=True)
     if request.method == 'POST':
