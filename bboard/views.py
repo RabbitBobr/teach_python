@@ -3,12 +3,13 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, formset_factory
 from django.forms.formsets import ORDERING_FIELD_NAME
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from .models import Bb, Rubric
-from .forms import BbForm
+from .forms import BbForm, SearchForm
 
 
 @login_required(login_url='/bboard/accounts/login/')
@@ -95,3 +96,39 @@ class BbDeleteView(DeleteView):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
+
+
+def search(request):
+    if request.method == 'POST':
+        sf = SearchForm(request.POST)
+        if sf.is_valid():
+            keyword = sf.cleaned_data['keyword']
+            rubric_id = sf.cleaned_data['rubric'].pk
+            bbs = Bb.objects.filter(rubric=rubric_id).filter(Q(title__icontains=keyword) | Q(content__icontains=keyword))
+            context = {'bbs': bbs}
+            return render(request, 'bboard/search_result.html', context)
+    else:
+        sf = SearchForm()
+        context = {'form': sf}
+        return render(request, 'bboard/search.html', context)
+
+
+def formset_processing(request):
+    FS = formset_factory(SearchForm, extra=6, can_order=True, can_delete=True)
+    if request.method == 'POST':
+        formset = FS(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data and not form.cleaned_data['DELETE']:
+                    keyword = form.cleaned_data['keyword']
+                    rubric_id = form.cleaned_data['rubric_id'].pk
+                    order = form.cleaned_data['ORDER']
+                    bbs = Bb.objects.filter(rubric=rubric_id).filter(
+                        Q(title__icontains=keyword) | Q(content__icontains=keyword))
+                    context = {'bbs': bbs}
+                    return render(request, 'bboard/search_result.html', context)
+    else:
+        formset = FS()
+    context = {'formset': formset}
+    return render(request, 'bboard/formset.html', context)
+

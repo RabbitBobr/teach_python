@@ -1,8 +1,10 @@
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
+from captcha.fields import CaptchaField
 
 from .models import Bb, Rubric
+
 
 
 class BbForm(forms.ModelForm):
@@ -26,3 +28,9 @@ class BbForm(forms.ModelForm):
         model = Bb
         fields = ('title', 'content', 'price', 'rubric')
         labels = {'title': 'Название товара'}
+
+
+class SearchForm(forms.Form):
+    keyword = forms.CharField(max_length=20, label='Искомое слово')
+    rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(), label='Рубрика')
+

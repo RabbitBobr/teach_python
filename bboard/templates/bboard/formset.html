@@ -1,0 +1,18 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Фабрика форм поиска{% endblock %}
+
+{% block content %}
+<h2>Рубрики</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        <tr><td colspan="2">{{ form.rubric }}</td></tr>
+        <tr><td>{{ form.ORDER }}</td><td>{{ form.DELETE }}</td></tr>
+        {% endfor %}
+    </table>
+    <p><input type="submit" value="Сохранить"></p>
+</form>
+{% endblock %}

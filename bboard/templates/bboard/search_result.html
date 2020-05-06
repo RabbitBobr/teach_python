@@ -1,7 +1,8 @@
 {% extends "layout/base.html" %}
 
+{% block title %}Результаты поиска{% endblock %}
+
 {% block content %}
-<a href="{% url 'search' %}">Поиск</a>
 {% for bb in bbs %}
 <div class="b">
     <h2><a href="{% url 'detail' pk=bb.pk %}">{{ bb.title }}</a></h2>
@@ -12,14 +13,4 @@
     <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
 </div>
 {% endfor %}
-<div>
-    {% if page.has_previous %}
-    <a href="?page={{ page.previous_page_number }}">&lt;</a>
-    &nbsp;&nbsp;|&nbsp;&nbsp;
-    {% endif %}
-    Часть №{{ page.number }} из {{ page.paginator.num_pages }}
-    {% if page.has.next %}
-    &nbsp;&nbsp;|&nbsp;&nbsp;<a href="?page={{ page.next_page_number }}">&gt;</a>
-    {% endif %}
-</div>
 {% endblock %}

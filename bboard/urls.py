@@ -1,10 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 
-from .views import index, rubrics, BbCreateView, BbDetailView, BbByRubricView, BbEditView, BbDeleteView
+from .views import index, rubrics, BbCreateView, BbDetailView, BbByRubricView, BbEditView, BbDeleteView, formset_processing
 
 urlpatterns = [
     path('add/', BbCreateView.as_view(), name='add'),
+    path('search/', formset_processing, name='search'),
     path('detail/<int:pk>/', BbDetailView.as_view(), name='detail'),
     path('<int:rubric_id>/', BbByRubricView.as_view(), name='by_rubric'),
     path('update/<int:pk>/', BbEditView.as_view(), name='update'),
